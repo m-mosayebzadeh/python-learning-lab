@@ -2,23 +2,22 @@ import re
 import pandas as pd
 from datetime import datetime
 
-def parse_to_csv(filename):
+LOG_PATTERN = re.compile(r"^(?P<date>\d{4}-\d{2}-\d{2})\s(?P<time>\d{2}:\d{2}:\d{2})\s(?P<level>ERROR|WARN|INFO)\s(?P<message>.+)$")
 
-    raws = []
+def parse_logs(filename):
+
+    rows = []
 
     with open(filename, "r") as f:
-        reg = re.compile(r"^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2}:\d{2})\s(ERROR|WARN|INFO)\s(.+)$")
 
-        for l in f:
-            match = reg.match(l)
+        for line in f:
+            match = LOG_PATTERN.match(line)
             
             if match:
-                raws.append({
-                    "datetime":datetime.strptime((match.group(1) + " " + match.group(2)), "%Y-%m-%d %H:%M:%S"),
-                    "date":match.group(1),
-                    "time":match.group(2),
-                    "level":match.group(3),
-                    "message":match.group(4)
+                rows.append({
+                    "datetime":datetime.strptime((match.group("date") + " " + match.group("time")), "%Y-%m-%d %H:%M:%S"),
+                    "level":match.group("level"),
+                    "message":match.group("message")
                 })
 
-    return pd.DataFrame(raws)
+    return pd.DataFrame(rows)
