@@ -11,7 +11,7 @@ def get_log_frequency_by_level(data:pd.DataFrame, level:str|None = None) -> pd.S
 
     return data["message"].value_counts()
 
-def count_logs_by_time(data:pd.DataFrame, unit:str) -> pd.Series:
+def count_logs_by_time(data:pd.DataFrame, unit:str = "h") -> pd.Series:
 
     allowed_date = ["Y", "M"]
     allowed_time = [ "d", "h", "min"]
