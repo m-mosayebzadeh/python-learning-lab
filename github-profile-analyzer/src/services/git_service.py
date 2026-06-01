@@ -1,26 +1,8 @@
-import requests
-import config
-from fastapi import HTTPException
-
-
-def get_headers():
-    return {
-        "Accept": config.ACCEPT_HEADER,
-        "X-GitHub-Api-Version": config.API_VERSION,
-        "Authorization": f"Bearer {config.GITHUB_TOKEN}"
-    }
+from client import git_client
 
 def get_user_info(username:str):
 
-    headers = get_headers()
-
-    url = f"https://api.github.com/users/{username}"
-
-    response = requests.get(url, headers=headers, timeout=10)
-    response.raise_for_status()
-
-
-    user = response.json()
+    user = git_client.call_user_info(username)
 
     return {
         "username" : user.get("login"),
@@ -36,16 +18,11 @@ def get_user_info(username:str):
 
 def get_repositories(username:str):
     
-    headers = get_headers()
-
-    url = f"https://api.github.com/users/{username}/repos"
-
-    response = requests.get(url, headers=headers, timeout=10)
-    response.raise_for_status()
+    git_repositories = git_client.call_user_repositories(username)
 
     repositories = []
 
-    for repo in response.json():
+    for repo in git_repositories:
 
         if not repo.get("private"):
             repositories.append({
@@ -62,19 +39,8 @@ def get_repositories(username:str):
 
 def get_popular_repositories(username:str, sort_item_list: list[str]):
 
-    allowed_sort_fields = ["star_count", "forks_count"]
-
-    invalid_items = [item for item in sort_item_list if item not in allowed_sort_fields]
-  
-    # TODO transfer to api layer 
-    if invalid_items:
-        raise HTTPException(
-            status_code= 422,
-            detail= f"invalid sort fields : {",".join(invalid_items)} -> just use this list items : {allowed_sort_fields}"
-        )
-    
-
     repositories = get_repositories(username)
+    
     sorted_item = sorted(
         repositories,
         key=lambda item: tuple(item[field] for field in sort_item_list),
@@ -85,12 +51,7 @@ def get_popular_repositories(username:str, sort_item_list: list[str]):
 
 def get_language_usage(username:str, repo_name:str):
     
-    url = f"https://api.github.com/repos/{username}/{repo_name}/languages"
-    
-    response = requests.get(url, headers= get_headers())
-    response.raise_for_status()
-    
-    res = response.json()
+    res = git_client.call_repo_language(username, repo_name)
     
     language_percent = []
     
