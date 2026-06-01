@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import services.git_service as git_service
-import git_depends
+from api import git_depends
 from fastapi import Depends
 
 router = APIRouter()
