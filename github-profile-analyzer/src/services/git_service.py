@@ -70,7 +70,7 @@ def get_popular_repositories(username:str, sort_item_list: list[str]):
     if invalid_items:
         raise HTTPException(
             status_code= 422,
-            detail= f"invalid sort fields : {",".join(invalid_items)}"
+            detail= f"invalid sort fields : {",".join(invalid_items)} -> just use this list items : {allowed_sort_fields}"
         )
     
 
@@ -82,4 +82,25 @@ def get_popular_repositories(username:str, sort_item_list: list[str]):
     )
 
     return sorted_item
+
+def get_language_usage(username:str, repo_name:str):
     
+    url = f"https://api.github.com/repos/{username}/{repo_name}/languages"
+    
+    response = requests.get(url, headers= get_headers())
+    response.raise_for_status()
+    
+    res = response.json()
+    
+    language_percent = []
+    
+    if res:
+        total_bytes = sum(res.values())
+        
+        for lang, bytes in res.items():
+            language_percent.append({
+                "language": lang,
+                "usage": round((bytes / total_bytes) * 100, 1)
+            })
+            
+    return language_percent

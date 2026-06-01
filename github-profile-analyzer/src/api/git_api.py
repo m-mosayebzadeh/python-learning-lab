@@ -15,3 +15,7 @@ def get_all_repo_name(username:str):
 @router.get("/repo/popular")
 def get_popular_repo(username:str, sort_item_list: list[str] = Query(default=["star_count"])):
     return git_service.get_popular_repositories(username, sort_item_list)
+
+@router.get("/language/usage")
+def get_language_usage(username:str, repo_name:str):
+    return git_service.get_language_usage(username, repo_name)
