@@ -4,6 +4,7 @@ from models.responses.repository_response import RepositoryResponse
 from models.responses.language_usage_response import LanguageUsageResponse
 from models.mappers.user_info_mapper import to_user_info_response
 from models.mappers.repository_mapper import to_repository_response
+from models.enums.repository_sort_field import RepositorySortField
 
 def get_user_info(username:str) -> UserInfoResponse:
 
@@ -24,13 +25,13 @@ def get_repositories(username:str) -> list[RepositoryResponse]:
     return repositories
 
 
-def get_popular_repositories(username:str, sort_item_list: list[str]) -> list[RepositoryResponse]:
+def get_popular_repositories(username:str, sort_item_list: list[RepositorySortField]) -> list[RepositoryResponse]:
 
     repositories = get_repositories(username)
     
     sorted_item = sorted(
         repositories,
-        key=lambda item: tuple(item[field] for field in sort_item_list),
+        key=lambda item: tuple(getattr(item, field.value) for field in sort_item_list),
         reverse=True
     )
 
