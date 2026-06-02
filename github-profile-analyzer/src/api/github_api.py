@@ -16,7 +16,7 @@ def get_user_info(username:str = Depends(github_depends.get_user_name)):
     return git_service.get_user_info(username)
 
 @router.get(
-    "/repo/all-repo-name",
+    "/repo/all-repo",
     response_model=list[RepositoryResponse]
 )
 def get_all_repo(username:str = Depends(github_depends.get_user_name)):
