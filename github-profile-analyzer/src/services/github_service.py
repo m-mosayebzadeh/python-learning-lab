@@ -1,10 +1,12 @@
-from client import github_client as github_client
+from client.github_client import GitHubClient
 from models.responses.user_info_response import UserInfoResponse
 from models.responses.repository_response import RepositoryResponse
 from models.responses.language_usage_response import LanguageUsageResponse
 from models.mappers.user_info_mapper import to_user_info_response
 from models.mappers.repository_mapper import to_repository_response
 from models.enums.repository_sort_field import RepositorySortField
+
+github_client = GitHubClient()
 
 def get_user_info(username:str) -> UserInfoResponse:
 
