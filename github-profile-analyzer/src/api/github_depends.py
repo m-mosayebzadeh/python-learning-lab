@@ -1,4 +1,4 @@
-from fastapi import Depends, Query, HTTPException
+from fastapi import Query, HTTPException
 
 def get_user_name(username:str = Query(..., min_length=1)) -> str:
     
