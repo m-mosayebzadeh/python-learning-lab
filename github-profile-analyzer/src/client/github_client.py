@@ -7,10 +7,10 @@ class GitHubClient:
     
     BASE_URL = "https://api.github.com"
     
-    def safe_get(self, url:str, headers:dict | None = None, timeout:int | None = config.DEFAULT_TIMEOUT):
+    def safe_get(self, url:str, headers:dict | None = None, timeout:int | None = config.DEFAULT_TIMEOUT, params:dict | None = None):
         
         try:
-            response = requests.get(url, headers=headers, timeout=timeout)
+            response = requests.get(url, headers=headers, timeout=timeout, params=params)
             
             self.validate_response(response)
             
@@ -41,11 +41,16 @@ class GitHubClient:
         return self.safe_get(url, headers=self.get_headers())
 
 
-    def call_user_repositories(self, username:str):
+    def call_user_repositories(self, username:str, page:int, page_size:int):
             
         url = f"{self.BASE_URL}/users/{username}/repos"
 
-        return self.safe_get(url, headers=self.get_headers())
+        params = {
+            "page": page,
+            "per_page": page_size
+        }
+        
+        return self.safe_get(url, headers=self.get_headers(), params=params)
 
 
     def call_repo_language(self, username:str, repo_name:str):

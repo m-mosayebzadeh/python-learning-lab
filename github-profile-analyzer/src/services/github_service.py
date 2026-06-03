@@ -14,22 +14,21 @@ def get_user_info(username:str) -> UserInfoResponse:
     
     return to_user_info_response(user)
 
-def get_repositories(username:str) -> list[RepositoryResponse]:
+def get_repositories(username:str, page:int, page_size:int) -> list[RepositoryResponse]:
     
-    git_repositories = github_client.call_user_repositories(username)
+    git_repositories = github_client.call_user_repositories(username, page, page_size)
 
     repositories = []
 
     for repo in git_repositories:
-        if not repo.get("private"):
-            repositories.append(to_repository_response(repo))
+        repositories.append(to_repository_response(repo))
 
     return repositories
 
 
-def get_popular_repositories(username:str, sort_item_list: list[RepositorySortField]) -> list[RepositoryResponse]:
+def get_popular_repositories(username:str, sort_item_list: list[RepositorySortField], page:int, page_size:int) -> list[RepositoryResponse]:
 
-    repositories = get_repositories(username)
+    repositories = get_repositories(username, page, page_size)
     
     sorted_item = sorted(
         repositories,
