@@ -1,3 +1,15 @@
+# environment
+.env
+
+# database
+*.db
+*.sqlite
+*.sqlite3
+
+# python cache
 __pycache__/
 *.pyc
-.env
+
+# IDE
+.vscode/
+.idea/
