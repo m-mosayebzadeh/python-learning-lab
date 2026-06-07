@@ -9,3 +9,4 @@ class Membership(Base):
     id : Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100))
     token_limit : Mapped[int]
+    is_default : Mapped[bool] = mapped_column(default=False)

@@ -8,6 +8,9 @@ from alembic import context
 from database.base import Base
 import database.config as db_config
 
+from model.entity.user import User
+from model.entity.membership import Membership
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
