@@ -50,5 +50,8 @@ def set_default_membership(membership_id:int, session : Session):
     
     new_membership.is_default = True
     session.commit()
+
+def find_default_membership(session:Session) -> Membership:
+    return membership_repository.find_default_membership(session)
         
     
