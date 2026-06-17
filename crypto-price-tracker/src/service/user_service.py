@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from model.entity.user import User
 import service.membership_service as membership_service
 from model.dto.response.user_response_dto import UserResponseDTO
+import service.auth_service as auth_service
 
 def get_all(session : Session) -> list[UserResponseDTO]:
     user_list = user_repository.find_all_user(session)
@@ -14,6 +15,9 @@ def get_all(session : Session) -> list[UserResponseDTO]:
             membership= user.membership.name
         ) for user in user_list
     ]
+
+def get_by_username(username: str, session: Session) -> User:
+    return user_repository.find_by_username(username, session)
 
 def register_user(dto : UserRegisterDTO, session : Session) -> UserResponseDTO:
     
@@ -32,7 +36,7 @@ def register_user(dto : UserRegisterDTO, session : Session) -> UserResponseDTO:
     user = User(
         username = dto.username,
         email= dto.email,
-        password= dto.password,
+        password= auth_service.hash_password(dto.password),
         membership = membership
     )
     
