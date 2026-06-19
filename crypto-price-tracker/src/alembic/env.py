@@ -10,6 +10,7 @@ import database.config as db_config
 
 from model.entity.user import User
 from model.entity.membership import Membership
+from model.entity.user_api_usage import UserApiUsage
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

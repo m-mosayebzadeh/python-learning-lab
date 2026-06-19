@@ -49,3 +49,5 @@ def register_user(dto : UserRegisterDTO, session : Session) -> UserResponseDTO:
         membership= membership.name
     )
     
+def get_by_id(user_id: int, session: Session) -> User:
+    return session.get(User, user_id)
