@@ -16,13 +16,13 @@ def login(username: str, password: str, session: Session = Depends(get_session))
     user = user_service.get_by_username(username, session)
 
     if not user:
-        return HTTPException(
+        raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= "Invalid credentials"
         )
     
     if not auth_service.verify_password(password, user.password):
-        return HTTPException(
+        raise HTTPException(
             status_code= status.HTTP_401_UNAUTHORIZED,
             detail= "Invalid credentials"
         )
