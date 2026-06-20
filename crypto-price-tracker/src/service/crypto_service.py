@@ -4,8 +4,8 @@ from model.enum.fiat_currency import FiatCurrency
 from model.entity.user import User
 import service.user_api_usage_service as user_api_usage_service
 from sqlalchemy.orm import Session
+from model.dto.response.crypto_price_response_dto import CryptoPriceResponse
 
-def get_price(fiat : FiatCurrency, crypto: CryptoCurrency, user: User, session: Session):
+def get_price(fiat : FiatCurrency, crypto: CryptoCurrency, user: User, session: Session) -> CryptoPriceResponse:
     user_api_usage_service.check_and_increament(user, session)
-    price_response = gecko_service.get_price(fiat, crypto)
-    return price_response
+    return gecko_service.get_price(fiat, crypto)

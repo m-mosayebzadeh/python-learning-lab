@@ -8,7 +8,7 @@ from fastapi import HTTPException, status
 def check_and_increament(user: User, session: Session):
 
     today = date.today()
-    usage = usage_repository.find_by_user_and_date(user.id, today, session)
+    usage = find_by_user_and_date(user.id, today, session)
 
     if not usage:
         usage = UserApiUsage(user_id= user.id, date = today, call_count = 0)
@@ -23,4 +23,5 @@ def check_and_increament(user: User, session: Session):
     usage.call_count += 1
     session.commit()
     
-
+def find_by_user_and_date(user_id: int, date: date, session: Session) -> UserApiUsage:
+    return usage_repository.find_by_user_and_date(user_id, date, session)

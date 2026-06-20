@@ -6,9 +6,15 @@ from service.security_service import get_current_user
 from model.entity.user import User
 from sqlalchemy.orm import Session
 from database.session import get_session
+from model.dto.response.crypto_price_response_dto import CryptoPriceResponse
 
 router = APIRouter(prefix="/crypto", tags=["Crypto"])
 
-@router.get("/price")
-def get_price(fiat : FiatCurrency, crypto: CryptoCurrency, user: User = Depends(get_current_user), session: Session = Depends(get_session)):
+@router.get(
+    path= "/price",
+    response_model=CryptoPriceResponse
+)
+def get_price(fiat : FiatCurrency, crypto: CryptoCurrency, user: User = Depends(get_current_user),
+               session: Session = Depends(get_session)):
+    
     return crypto_service.get_price(fiat, crypto, user, session)
