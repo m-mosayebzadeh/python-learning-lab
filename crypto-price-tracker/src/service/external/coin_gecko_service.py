@@ -2,7 +2,7 @@ import requests
 from model.enum.crypto_currency import CryptoCurrency
 from model.enum.fiat_currency import FiatCurrency
 import config
-from fastapi import HTTPException, status
+from exception.app_exception import NotFoundException
 from model.dto.response.crypto_price_response_dto import CryptoPriceResponse
 
 PRICE_URL = config.GECKO_BASE_URL + "price"
@@ -23,10 +23,7 @@ def get_price(fiat: FiatCurrency, crypto: CryptoCurrency) -> CryptoPriceResponse
     crypto_detail = res.get(crypto.value, None)
 
     if not crypto_detail:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Cryptocurrency '{crypto.value}' not found"
-        )
+        raise NotFoundException(f"Cryptocurrency '{crypto.value}' not found")
     
     return CryptoPriceResponse(
         crypto=crypto.value,

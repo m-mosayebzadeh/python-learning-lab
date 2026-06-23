@@ -2,7 +2,7 @@ import conftest
 import unittest
 from unittest.mock import MagicMock, patch
 import service.user_api_usage_service as user_api_usage_service
-from fastapi import HTTPException
+from exception.app_exception import RateLimitException
 
 
 
@@ -45,7 +45,7 @@ class TestUserApiUsageService(unittest.TestCase):
 
         user.membership = membership
 
-        with self.assertRaises(HTTPException) as context:
+        with self.assertRaises(RateLimitException) as context:
             user_api_usage_service.check_and_increament(user, session)
 
         self.assertEqual(context.exception.status_code, 429)

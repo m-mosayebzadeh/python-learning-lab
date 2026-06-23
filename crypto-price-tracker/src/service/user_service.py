@@ -5,12 +5,10 @@ from model.entity.user import User
 import service.membership_service as membership_service
 from model.dto.response.user_response_dto import UserResponseDTO
 import service.auth_service as auth_service
-from model.entity.membership import Membership
 from model.dto.response.user_profile_response_dto import UserProfileResponse
-from model.entity.user_api_usage import UserApiUsage
 import service.user_api_usage_service as user_api_usage_service
 from datetime import date
-from fastapi import HTTPException, status
+from exception.app_exception import DuplicateException, NotFoundException
 
 def get_user_profile(session: Session, user: User) -> UserProfileResponse:
     
@@ -46,14 +44,12 @@ def register_user(dto : UserRegisterDTO, session : Session) -> UserResponseDTO:
     user = user_repository.find_user_by_username_or_email(dto.username, dto.email, session)
     
     if user:
-        raise ValueError("User already exist")
+        raise DuplicateException("User already exist")
     
     membership = membership_service.find_default_membership(session)    
 
     if not membership:
-        raise ValueError(
-            "No default membership configured"
-    )
+        raise NotFoundException("No default membership configured")
 
     user = User(
         username = dto.username,
